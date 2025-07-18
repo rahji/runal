@@ -117,7 +117,7 @@ func Start(ctx context.Context, done chan struct{}, setup, draw func(c *Canvas),
 				case input.MouseWheelEvent:
 					fmt.Printf("\rwheel: %v\n", e)
 				case input.KeyPressEvent:
-					fmt.Printf("\rkey press event: %s\n", e.Key().Text)
+					fmt.Printf("\rkey press event: %s (%s)\n", e.Key().Text, e.Key().Keystroke())
 					switch e.String() {
 					case "ctrl+c":
 						if done != nil {
@@ -134,7 +134,7 @@ func Start(ctx context.Context, done chan struct{}, setup, draw func(c *Canvas),
 						}
 					}
 				case input.KeyReleaseEvent:
-					fmt.Printf("\rkey release event: %s\n", e.Key().Text)
+					fmt.Printf("\rkey release event: %s (%s)\n", e.Key().Text, e.Key().Keystroke())
 				}
 			case <-ticker.C:
 				render()
