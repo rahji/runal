@@ -2,6 +2,7 @@ package runal
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -101,6 +102,7 @@ func Start(ctx context.Context, done chan struct{}, setup, draw func(c *Canvas),
 				case input.MouseMotionEvent:
 					c.MouseX = e.X
 					c.MouseY = e.Y
+					fmt.Printf("\rmotion: %d,%d\n", e.X, e.Y)
 				case input.MouseClickEvent:
 					if onMouse != nil {
 						onMouse(c, MouseEvent{
@@ -109,7 +111,13 @@ func Start(ctx context.Context, done chan struct{}, setup, draw func(c *Canvas),
 							Button: e.Button.String(),
 						})
 					}
-				case input.KeyEvent:
+					fmt.Printf("\rclick: %d,%d (%s)\n", e.X, e.Y, e.Button.String())
+				case input.MouseReleaseEvent:
+					fmt.Printf("\rrelease: %v\n", e)
+				case input.MouseWheelEvent:
+					fmt.Printf("\rwheel: %v\n", e)
+				case input.KeyPressEvent:
+					fmt.Printf("\rkey press event: %s\n", e.Key().Text)
 					switch e.String() {
 					case "ctrl+c":
 						if done != nil {
@@ -125,6 +133,8 @@ func Start(ctx context.Context, done chan struct{}, setup, draw func(c *Canvas),
 							})
 						}
 					}
+				case input.KeyReleaseEvent:
+					fmt.Printf("\rkey release event: %s\n", e.Key().Text)
 				}
 			case <-ticker.C:
 				render()
